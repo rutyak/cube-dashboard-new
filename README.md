@@ -48,36 +48,7 @@ Process:
     a. Create React App.
     b. Install Dependencies: @cubejs-client/core, @cubejs-client/react, recharts, react-router-dom
     c. Configure Cube.js Client.
-    d. Create Chart Components.
-    e. Set Up Routing and Navigation.
 
-In the Cube Cloud schema directory, create a file to define your data model:
-**Screenshot**: Installation process.
 
-### 1.2 Create a Database
 
-- Open PostgreSQL command line tool (`psql`) or use pgAdmin.
-- Create a new database:
-    ```sql
-    CREATE DATABASE my_database;
-    ```
-
-**Screenshot**: Database creation in pgAdmin or command line.
-
-### 1.3 Create a Table and Insert Data
-
-- Connect to your database and create a table:
-    ```sql
-    CREATE TABLE data_entries (
-      id SERIAL PRIMARY KEY,
-      name VARCHAR(255),
-      value NUMERIC,
-      timestamp TIMESTAMP
-    );
-    ```
-- Insert sample data:
-    ```sql
-    INSERT INTO data_entries (name, value, timestamp) VALUES
-    ('Sample A', 100, '2024-01-01 12:00:00'),
-    ('Sample B', 150, '2024-01-02 12:00:00');
     ```
