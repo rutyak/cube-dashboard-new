@@ -1,70 +1,83 @@
-# Getting Started with Create React App
+# Data Ingestion, Visualization, and React Integration Documentation
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Introduction
 
-## Available Scripts
+This documentation provides a comprehensive guide for setting up a data ingestion and visualization pipeline using PostgreSQL, Cube.js, and React. It includes installation steps, configuration details, and screenshots to assist in the setup process.
 
-In the project directory, you can run:
+## System Requirements
 
-### `npm start`
+- **Node.js**: v16 or later
+- **npm**: v8 or later
+- **PostgreSQL**: v13 or later
+- **Cube.js**: v0.27 or later
+- **React**: v18 or later
+- **supabase** v2.4
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+Process: 
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+1. Set Up Supabase:
+  a. Create a Supabase Project:
+       1) Sign up at Supabase.
+       2) Create a new project and note the API URL and public key.
+  
+  b. Create a Database Schema:
+       In Supabase, use the SQL editor to create a table:
 
-### `npm test`
+       query: 
+       CREATE TABLE public.demo_data (
+          id serial PRIMARY KEY,
+          name text,
+          value numeric,
+          timestamp timestamptz
+       );
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+       INSERT INTO public.demo_data (name, value, timestamp) VALUES
+       ('A', 10, '2023-09-01T10:00:00Z'),
+       ('B', 20, '2023-09-02T11:00:00Z'),
+       ('C', 30, '2023-09-03T12:00:00Z');
 
-### `npm run build`
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+2. Set Up Cube Cloud
+    a. Create a Cube Cloud Project:
+        1. Sign up at Cube Cloud and create a new project.
+        2. Connect Cube Cloud to Supabase instance using the credentials from Supabase.
+    b. Define Data Models in Cube.js.
+    c. Create Cube.js Queries for Charts.
+    
+3. Set Up React Application
+    a. Create React App.
+    b. Install Dependencies: @cubejs-client/core, @cubejs-client/react, recharts, react-router-dom
+    c. Configure Cube.js Client.
+    d. Create Chart Components.
+    e. Set Up Routing and Navigation.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+In the Cube Cloud schema directory, create a file to define your data model:
+**Screenshot**: Installation process.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### 1.2 Create a Database
 
-### `npm run eject`
+- Open PostgreSQL command line tool (`psql`) or use pgAdmin.
+- Create a new database:
+    ```sql
+    CREATE DATABASE my_database;
+    ```
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+**Screenshot**: Database creation in pgAdmin or command line.
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### 1.3 Create a Table and Insert Data
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+- Connect to your database and create a table:
+    ```sql
+    CREATE TABLE data_entries (
+      id SERIAL PRIMARY KEY,
+      name VARCHAR(255),
+      value NUMERIC,
+      timestamp TIMESTAMP
+    );
+    ```
+- Insert sample data:
+    ```sql
+    INSERT INTO data_entries (name, value, timestamp) VALUES
+    ('Sample A', 100, '2024-01-01 12:00:00'),
+    ('Sample B', 150, '2024-01-02 12:00:00');
+    ```
