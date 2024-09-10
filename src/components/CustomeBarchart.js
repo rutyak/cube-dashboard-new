@@ -1,29 +1,36 @@
 import React from "react";
 import { useCubeQuery } from "@cubejs-client/react";
-import { Bar } from "react-chartjs-2";
-import Chart from "chart.js/auto"; 
-import { RdPu4 } from "chartjs-plugin-colorschemes/src/colorschemes/colorschemes.brewer";
-import "chartjs-plugin-colorschemes"; 
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+} from "recharts";
 import moment from "moment";
-
-Chart.register(require("chartjs-plugin-colorschemes"));
 
 const CustomeBarchart = () => {
   const { resultSet, isLoading, error, progress } = useCubeQuery({
     limit: 5000,
     timezone: "Indian/Cocos",
+    dimensions: ["data_entries.name", "data_entries.value", "data_entries.id"],
+    measures: ["data_entries.totalValue"],
     timeDimensions: [
       {
         dimension: "data_entries.timestamp",
-        granularity: "day",
+        granularity: "month",
       },
     ],
-    measures: ["data_entries.totalValue"],
-    dimensions: ["data_entries.id", "data_entries.value"],
   });
 
   if (isLoading) {
-    return <div>{(progress && progress.stage && progress.stage.stage) || "Loading..."}</div>;
+    return (
+      <div>
+        {(progress && progress.stage && progress.stage.stage) || "Loading..."}
+      </div>
+    );
   }
 
   if (error) {
@@ -34,53 +41,33 @@ const CustomeBarchart = () => {
     return null;
   }
 
-  const labels = resultSet
-    .tablePivot()
-    .map((row) => moment(row["data_entries.timestamp.day"]).format("YYYY-MM-DD"));
-
-  const datasets = [
-    {
-      label: "Total Value", 
-      data: resultSet
-        .tablePivot()
-        .map((row) => row["data_entries.totalValue"]),
-      backgroundColor: "#8884d8", 
-    },
-  ];
+  const dataSource = resultSet.tablePivot().map((row) => ({
+    timestamp: moment(row["data_entries.timestamp.month"]).format("MMM YYYY"), 
+    totalValue: row["data_entries.totalValue"], 
+  }));
 
   return (
-    <Bar
-      data={{
-        labels,
-        datasets,
-      }}
-      options={{
-        responsive: true,
-        plugins: {
-          colorschemes: {
-            scheme: RdPu4, 
-          },
-        },
-        scales: {
-          x: {
-            title: {
-              display: true,
-              text: "Date", 
-            },
-          },
-          y: {
-            title: {
-              display: true,
-              text: "Total Value", 
-            },
-          },
-        },
-        legend: {
-          position: "bottom",
-          align: "start",
-        },
-      }}
-    />
+    <BarChart
+      width={580}
+      height={300}
+      data={dataSource}
+      margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+    >
+      <CartesianGrid strokeDasharray="3 3" />
+      <XAxis
+        dataKey="timestamp" 
+        tickFormatter={(tickItem) =>
+          moment(tickItem, "MMM YYYY").format("MMM YYYY")
+        } 
+      />
+      <YAxis />
+      <Tooltip />
+      <Legend />
+      <Bar
+        dataKey="totalValue"
+        fill="#8884d8"
+      />
+    </BarChart>
   );
 };
 

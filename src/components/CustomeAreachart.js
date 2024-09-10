@@ -13,16 +13,16 @@ import moment from "moment";
 
 const CustomeAreachart = () => {
   const { resultSet, isLoading, error, progress } = useCubeQuery({
+    limit: 5000,
+    timezone: "Indian/Cocos",
+    dimensions: ["data_entries.name", "data_entries.value", "data_entries.id"],
     measures: ["data_entries.totalValue"],
-    dimensions: ["data_entries.id", "data_entries.value"],
     timeDimensions: [
       {
         dimension: "data_entries.timestamp",
         granularity: "month",
       },
     ],
-    limit: 5000,
-    timezone: "Indian/Cocos",
   });
 
   if (isLoading) {
@@ -41,29 +41,34 @@ const CustomeAreachart = () => {
     return null;
   }
 
-  const dataSource = resultSet.tablePivot();
+  const dataSource = resultSet.tablePivot().map((row) => ({
+    timestamp: moment(row["data_entries.timestamp.month"]).format("MMM YYYY"), 
+    totalValue: row["data_entries.totalValue"], 
+  }));
 
   return (
     <AreaChart
-      width={600}
+      width={580}
       height={300}
       data={dataSource}
       margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
     >
       <CartesianGrid strokeDasharray="3 3" />
       <XAxis
-        dataKey="data_entries.timestamp.month"
-        tickFormatter={(tickItem) => moment(tickItem).format("MMM YYYY")}
+        dataKey="timestamp" 
+        tickFormatter={(tickItem) =>
+          moment(tickItem, "MMM YYYY").format("MMM YYYY")
+        } 
       />
       <YAxis />
       <Tooltip />
       <Legend />
       <Area
         type="monotone"
-        dataKey="data_entries.totalValue"
+        dataKey="totalValue" 
         stroke="#8884d8"
-        fill="#8884d8"
         fillOpacity={0.3}
+        fill="#8884d8"
       />
     </AreaChart>
   );
