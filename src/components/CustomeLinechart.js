@@ -10,6 +10,7 @@ import {
   Legend,
 } from "recharts";
 import moment from "moment";
+import { Box, Center, Spinner, Text } from "@chakra-ui/react";
 
 const CustomeLinechart = () => {
   const { resultSet, isLoading, error, progress } = useCubeQuery({
@@ -27,14 +28,19 @@ const CustomeLinechart = () => {
 
   if (isLoading) {
     return (
-      <div>
-        {(progress && progress.stage && progress.stage.stage) || "Loading..."}
-      </div>
+      <Center h="100%" w="100%">
+        <Spinner size="xl" />
+        <Text ml={4}>Loading... {progress?.stage?.stage || ""}</Text>
+      </Center>
     );
   }
 
   if (error) {
-    return <div>{error.toString()}</div>;
+    return (
+      <Center h="100%" w="100%">
+        <Text color="red.500">Error: {error.toString()}</Text>
+      </Center>
+    );
   }
 
   if (!resultSet) {
@@ -42,34 +48,36 @@ const CustomeLinechart = () => {
   }
 
   const dataSource = resultSet.tablePivot().map((row) => ({
-    timestamp: moment(row["data_entries.timestamp.month"]).format("MMM YYYY"), 
-    totalValue: row["data_entries.totalValue"], 
+    timestamp: moment(row["data_entries.timestamp.month"]).format("MMM YYYY"),
+    totalValue: row["data_entries.totalValue"],
   }));
 
   return (
-    <LineChart
-      width={580}
-      height={300}
-      data={dataSource}
-      margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
-    >
-      <XAxis
-        dataKey="timestamp" 
-        tickFormatter={(tickItem) =>
-          moment(tickItem, "MMM YYYY").format("MMM YYYY")
-        } 
-      />
-      <YAxis />
-      <CartesianGrid strokeDasharray="3 3" />
-      <Tooltip />
-      <Legend />
-      <Line
-        type="monotone"
-        dataKey="totalValue" 
-        stroke="#8884d8"
-        activeDot={{ r: 8 }}
-      />
-    </LineChart>
+    <Box maxW="580px">
+      <LineChart
+        width={580}
+        height={300}
+        data={dataSource}
+        margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+      >
+        <XAxis
+          dataKey="timestamp"
+          tickFormatter={(tickItem) =>
+            moment(tickItem, "MMM YYYY").format("MMM YYYY")
+          }
+        />
+        <YAxis />
+        <CartesianGrid strokeDasharray="3 3" />
+        <Tooltip />
+        <Legend />
+        <Line
+          type="monotone"
+          dataKey="totalValue"
+          stroke="#8884d8"
+          activeDot={{ r: 8 }}
+        />
+      </LineChart>
+    </Box>
   );
 };
 

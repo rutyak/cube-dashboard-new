@@ -1,0 +1,18 @@
+.chart-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+  
+  @media screen and (max-width: 1080px) {
+    .chart-container {
+      display: flex !important;
+      flex-direction: column !important;
+      align-items: center !important;
+      gap: 16px !important;
+      max-width: 679px; 
+      margin: 0 auto;
+      padding: 16px;
+    }
+  }
+  

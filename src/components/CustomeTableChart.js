@@ -2,6 +2,18 @@ import React from "react";
 import { useCubeQuery } from "@cubejs-client/react";
 import { useTable } from "react-table";
 import moment from "moment";
+import {
+  Box,
+  Center,
+  Spinner,
+  Text,
+  Table,
+  Thead,
+  Tbody,
+  Tr,
+  Th,
+  Td,
+} from "@chakra-ui/react";
 
 const CustomeTableChart = () => {
   const { resultSet, isLoading, error, progress } = useCubeQuery({
@@ -49,14 +61,19 @@ const CustomeTableChart = () => {
 
   if (isLoading) {
     return (
-      <div>
-        {(progress && progress.stage && progress.stage.stage) || "Loading..."}
-      </div>
+      <Center h="100%" w="100%">
+        <Spinner size="xl" />
+        <Text ml={4}>Loading... {progress?.stage?.stage || ""}</Text>
+      </Center>
     );
   }
 
   if (error) {
-    return <div>{error.toString()}</div>;
+    return (
+      <Center h="100%" w="100%">
+        <Text color="red.500">Error: {error.toString()}</Text>
+      </Center>
+    );
   }
 
   if (!resultSet) {
@@ -64,33 +81,40 @@ const CustomeTableChart = () => {
   }
 
   return (
-    <table {...getTableProps()} style={{ width: '100%', border: '1px solid #ddd', borderCollapse: 'collapse' }}>
-      <thead>
-        {headerGroups.map(headerGroup => (
-          <tr {...headerGroup.getHeaderGroupProps()}>
-            {headerGroup.headers.map(column => (
-              <th {...column.getHeaderProps()} style={{ border: '1px solid #ddd', padding: '8px' }}>
-                {column.render('Header')}
-              </th>
-            ))}
-          </tr>
-        ))}
-      </thead>
-      <tbody {...getTableBodyProps()}>
-        {rows.map(row => {
-          prepareRow(row);
-          return (
-            <tr {...row.getRowProps()}>
-              {row.cells.map(cell => (
-                <td {...cell.getCellProps()} style={{ border: '1px solid #ddd', padding: '8px' }}>
-                  {cell.render('Cell')}
-                </td>
+    <Box
+      borderWidth={1}
+      borderRadius="md"
+      overflow="hidden"
+      bg="white"
+      p={4}
+      boxShadow="md"
+      width="full"
+      minW="400px"
+    >
+      <Table {...getTableProps()} variant="simple" size="sm">
+        <Thead>
+          {headerGroups.map(headerGroup => (
+            <Tr {...headerGroup.getHeaderGroupProps()}>
+              {headerGroup.headers.map(column => (
+                <Th {...column.getHeaderProps()}>{column.render('Header')}</Th>
               ))}
-            </tr>
-          );
-        })}
-      </tbody>
-    </table>
+            </Tr>
+          ))}
+        </Thead>
+        <Tbody {...getTableBodyProps()}>
+          {rows.map(row => {
+            prepareRow(row);
+            return (
+              <Tr {...row.getRowProps()}>
+                {row.cells.map(cell => (
+                  <Td {...cell.getCellProps()}>{cell.render('Cell')}</Td>
+                ))}
+              </Tr>
+            );
+          })}
+        </Tbody>
+      </Table>
+    </Box>
   );
 };
 

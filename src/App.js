@@ -6,6 +6,7 @@ import CustomeTableChart from "./components/CustomeTableChart";
 import CustomeLinechart from "./components/CustomeLinechart";
 import CustomeAreachart from "./components/CustomeAreachart";
 import CustomeBarchart from "./components/CustomeBarchart";
+import "./App.css"
 
 const App = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -39,7 +40,7 @@ const App = () => {
           overflow="auto"
           centerContent
         >
-          <VStack spacing={8} align="stretch" w="full" maxW="1200px">
+          <VStack spacing={8} align="stretch" w="full" maxW="1400px">
             <Heading as="h1" size="xl" textAlign="center" mb={4}>
               Data Visualization Dashboard
             </Heading>
@@ -58,7 +59,8 @@ const App = () => {
             />
 
             <Grid
-              templateColumns={{ base: "1fr", md: "repeat(2, 1fr)" }}
+              className="chart-container"
+              templateColumns={{ md: "repeat(2, 1fr)" }}
               gap={6}
               w="full"
             >
